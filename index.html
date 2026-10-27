@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Ubworozi - Iduka rya Kijyambere</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { background-color: #f4f7f6; color: #333; }
+        header { background-color: #2e7d32; color: white; padding: 15px; text-align: center; font-size: 20px; font-weight: bold; }
+        .container { padding: 20px; max-width: 600px; margin: auto; }
+        
+        /* Wallet Section */
+        .wallet-card { background: linear-gradient(135deg, #4caf50, #2e7d32); color: white; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .wallet-card h2 { font-size: 28px; margin-top: 5px; }
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        .btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; }
+        .btn-deposit { background-color: #ff9800; color: white; }
+        .btn-withdraw { background-color: white; color: #2e7d32; }
+        .btn-checkin { background-color: #00bcd4; color: white; width: 100%; margin-top: 10px; }
+
+        /* Product Shop Section */
+        .section-title { margin: 20px 0 10px 0; font-size: 18px; color: #2e7d32; }
+        .product-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .product-info h3 { font-size: 16px; color: #333; }
+        .product-info p { font-size: 13px; color: #666; margin-top: 2px; }
+        .btn-buy { background-color: #2e7d32; color: white; padding: 8px 15px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+
+        /* Form Section for Manual Inputs */
+        .form-popup { background: white; padding: 20px; border-radius: 12px; margin-top: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: none; }
+        .form-popup h3 { margin-bottom: 15px; color: #2e7d32; }
+        input { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 6px; }
+        .btn-submit { background-color: #2e7d32; color: white; width: 100%; }
+        .btn-close { background-color: #ccc; color: #333; width: 100%; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <header>🌽 Smart Ubworozi Hub</header>
+
+    <div class="container">
+        
+        <!-- Wallet View -->
+        <div class="wallet-card">
+            <p>Isanduku yawe (Wallet Balance)</p>
+            <h2 id="balance-view">0.00 RWF</h2>
+            <div class="btn-group">
+                <button class="btn btn-deposit" onclick="showForm('deposit')">🚀 Kubitsa</button>
+                <button class="btn btn-withdraw" onclick="showForm('withdraw')">💰 Kubikuza</button>
+            </div>
+            <button class="btn btn-checkin" onclick="dailyCheckin()">📅 Daily Check-in (+100 RWF)</button>
+        </div>
+
+        <!-- Iduka ry'Ibicuruzwa -->
+        <div class="section-title">🐓 Iduka ry'Ibicuruzwa by'Ubworozi</div>
+        
+        <div class="product-card">
+            <div class="product-info">
+                <h3>Inkoko z'amajyi (10 Layers Pack)</h3>
+                <p>Igiciro: <b>5,000 RWF</b> | Inyungu: 400 RWF / ku munsi</p>
+            </div>
+            <button class="btn-buy" onclick="buyProduct(1)">Gura</button>
+        </div>
+
+        <div class="product-card">
+            <div class="product-info">
+                <h3>Modern Pig Feeding Unit</h3>
+                <p>Igiciro: <b>25,000 RWF</b> | Inyungu: 2,200 RWF / ku munsi</p>
+            </div>
+            <button class="btn-buy" onclick="buyProduct(2)">Gura</button>
+        </div>
+
+        <div class="product-card">
+            <div class="product-info">
+                <h3>Modern Dairy Cow Unit</h3>
+                <p>Igiciro: <b>60,000 RWF</b> | Inyungu: 5,500 RWF / ku munsi</p>
+            </div>
+            <button class="btn-buy" onclick="buyProduct(3)">Gura</button>
+        </div>
+
+        <!-- Popup Form ya Manual Deposit / Withdraw -->
+        <div class="form-popup" id="action-form">
+            <h3 id="form-title">Kubitsa Manuweli</h3>
+            <p style="font-size: 12px; color: #ff9800; margin-bottom: 10px;" id="form-instruction"></p>
+            <input type="number" id="form-amount" placeholder="Umubare w'amafaranga (RWF)">
+            <input type="text" id="form-phone" placeholder="Nomero ya terefoni yakoreshejwe">
+            <button class="btn btn-submit" onclick="submitFinanceForm()">Ohereza Ubusabe</button>
+            <button class="btn btn-close" onclick="closeForm()">Funga</button>
+        </div>
+
+    </div>
+
+    <!-- Ikoranabuhanga rihuza na Backend (JavaScript) -->
+    <script>
+        let currentAction = 'deposit';
+        let userId = 1; // Urugero rw'umukoresha winjiye
+        const BACKEND_URL = "http://localhost:3000/api"; // Aha uzashyira URL ya Render niba uyi-hostingize
+
+        function showForm(action) {
+            currentAction = action;
+            document.getElementById('action-form').style.display = 'block';
+            if(action === 'deposit') {
+                document.getElementById('form-title').innerText = "🚀 Ohereza Ubusabe bwo Kubitsa";
+                document.getElementById('form-instruction').innerText = "Banza uboherereze amafaranga kuri Momo y'agatoroshi (078XXXXXXX), hanyuma uze kwandika umubare na nomero yawe hano.";
+            } else {
+                document.getElementById('form-title').innerText = "💰 Ohereza Ubusabe bwo Kubikuza";
+                document.getElementById('form-instruction').innerText = "Amafaranga azahita akatwa, Admin aya mwoherereze mu gatoroshi ke kuri iyi nomero.";
+            }
+        }
+
+        function closeForm() {
+            document.getElementById('action-form').style.display = 'none';
+        }
+
+        // 1. Kubitsa cyangwa Kubikuza Manuweli
+        async function submitFinanceForm() {
+            const amount = document.getElementById('form-amount').value;
+            const phoneNumber = document.getElementById('form-phone').value;
+            const endpoint = currentAction === 'deposit' ? '/manual/deposit' : '/manual/withdraw';
+
+            if(!amount || !phoneNumber) return alert("Uzuza ibyasabwe byose!");
+
+            const response = await fetch(BACKEND_URL + endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, amount, phoneNumber })
+            });
+            const data = await response.json();
+            alert(data.message);
+            closeForm();
+        }
+
+        // 2. Daily Check-in bonus
+        async function dailyCheckin() {
+            const response = await fetch(BACKEND_URL + '/user/checkin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId })
+            });
+            const data = await response.json();
+            alert(data.message);
+        }
+
+        // 3. Kugura igicuruzwa cy'ubworozi
+        async function buyProduct(productId) {
+            const response = await fetch(BACKEND_URL + '/user/purchase', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, productId })
+            });
+            const data = await response.json();
+            alert(data.message);
+        }
+    </script>
+</body>
+</html>
+
