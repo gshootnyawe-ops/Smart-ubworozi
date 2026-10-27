@@ -1,157 +1,217 @@
 <!DOCTYPE html>
 <html lang="rw">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Ubworozi - Iduka rya Kijyambere</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-        body { background-color: #f4f7f6; color: #333; }
-        header { background-color: #2e7d32; color: white; padding: 15px; text-align: center; font-size: 20px; font-weight: bold; }
-        .container { padding: 20px; max-width: 600px; margin: auto; }
-        
-        /* Wallet Section */
-        .wallet-card { background: linear-gradient(135deg, #4caf50, #2e7d32); color: white; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .wallet-card h2 { font-size: 28px; margin-top: 5px; }
-        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
-        .btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; }
-        .btn-deposit { background-color: #ff9800; color: white; }
-        .btn-withdraw { background-color: white; color: #2e7d32; }
-        .btn-checkin { background-color: #00bcd4; color: white; width: 100%; margin-top: 10px; }
-
-        /* Product Shop Section */
-        .section-title { margin: 20px 0 10px 0; font-size: 18px; color: #2e7d32; }
-        .product-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .product-info h3 { font-size: 16px; color: #333; }
-        .product-info p { font-size: 13px; color: #666; margin-top: 2px; }
-        .btn-buy { background-color: #2e7d32; color: white; padding: 8px 15px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-
-        /* Form Section for Manual Inputs */
-        .form-popup { background: white; padding: 20px; border-radius: 12px; margin-top: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: none; }
-        .form-popup h3 { margin-bottom: 15px; color: #2e7d32; }
-        input { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 6px; }
-        .btn-submit { background-color: #2e7d32; color: white; width: 100%; }
-        .btn-close { background-color: #ccc; color: #333; width: 100%; margin-top: 5px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#087443">
+  <title>Smart Ubworozi</title>
+  <style>
+    :root{--green:#087443;--green2:#0b9658;--bg:#f3f7f4;--ink:#173126;--muted:#718078;--card:#fff;--line:#e4ece7;--gold:#f5b942}
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
+    body{background:var(--bg);color:var(--ink);padding-bottom:88px}
+    .topbar{background:linear-gradient(135deg,#075b36,#0b9658);color:white;padding:20px 18px 24px;border-radius:0 0 24px 24px}
+    .topline{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{font-size:19px;font-weight:800;letter-spacing:.2px}.eyebrow{font-size:12px;opacity:.82;margin-bottom:5px}
+    .avatar{width:42px;height:42px;border-radius:50%;background:#ffffff26;border:1px solid #ffffff70;display:grid;place-items:center;font-size:20px}
+    .welcome{margin-top:22px;font-size:14px;opacity:.9}.headline{font-size:23px;margin-top:5px;line-height:1.25}
+    .container{max-width:760px;margin:-4px auto 0;padding:0 15px}
+    .tab-panel{display:none;padding-top:20px}.tab-panel.active{display:block}
+    .section-heading{display:flex;align-items:center;justify-content:space-between;margin:2px 0 14px}
+    .section-heading h2{font-size:19px}.sub{font-size:12px;color:var(--muted);margin-top:4px}
+    .wallet{background:linear-gradient(135deg,#087443,#10a765);color:white;padding:20px;border-radius:20px;box-shadow:0 9px 25px #08744320}
+    .wallet-label{font-size:13px;opacity:.9}.balance{font-size:30px;font-weight:800;margin:8px 0 5px}.wallet-foot{font-size:12px;opacity:.85}
+    .actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:17px}
+    button{font:inherit;cursor:pointer;border:0}
+    .action-btn{border-radius:12px;padding:12px 10px;font-weight:700;background:#fff;color:var(--green)}
+    .action-btn.secondary{background:#ffffff20;color:white;border:1px solid #ffffff65}
+    .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:15px 0}
+    .stat,.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px}
+    .stat .emoji{font-size:21px}.stat p{font-size:12px;color:var(--muted);margin-top:9px}.stat strong{display:block;font-size:18px;margin-top:4px}
+    .product-list{display:grid;gap:12px}
+    .product{background:white;border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;gap:12px;align-items:center}
+    .product-icon{width:58px;height:58px;border-radius:14px;background:#e8f5ed;display:grid;place-items:center;font-size:29px;flex-shrink:0}
+    .product-info{flex:1;min-width:0}.product-info h3{font-size:14px;line-height:1.35}.product-info p{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.4}
+    .price{font-weight:800;color:var(--green);margin-top:7px;font-size:14px}
+    .buy{background:var(--green);color:#fff;padding:10px 12px;border-radius:10px;font-size:12px;font-weight:700}
+    .invite-box{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px}
+    .invite-code{display:flex;gap:8px;margin-top:15px}.invite-code input{min-width:0;flex:1}
+    input{width:100%;padding:12px;border:1px solid #d9e5dd;border-radius:10px;font-size:14px;background:#fff;margin-top:8px}
+    .primary{background:var(--green);color:white;border-radius:10px;padding:12px 15px;font-weight:700}
+    .full{width:100%;margin-top:12px}.muted{color:var(--muted);font-size:13px;line-height:1.55}
+    .profile-row{display:flex;align-items:center;gap:13px}.profile-avatar{width:60px;height:60px;border-radius:50%;background:#e2f3e8;display:grid;place-items:center;font-size:28px}
+    .list-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line);font-size:14px}.list-row:last-child{border-bottom:0}
+    .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,minmax(0,1fr));padding:8px 4px calc(8px + env(safe-area-inset-bottom));z-index:10;box-shadow:0 -5px 18px #1731260a}
+    .nav-btn{display:flex;flex-direction:column;align-items:center;gap:5px;background:transparent;color:#819087;font-size:10px;font-weight:700;padding:5px 0;min-width:0}
+    .nav-btn .nav-icon{font-size:20px;line-height:1.1}.nav-btn.active{color:var(--green)}
+    .notice{display:none;margin:12px 0;padding:12px;border-radius:10px;background:#fff4d9;color:#79550a;font-size:13px}
+    .form-card{display:none;margin-top:14px}.form-card.show{display:block}
+    @media(min-width:620px){.container{padding:0 22px}.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.bottom-nav{left:50%;right:auto;transform:translateX(-50%);width:min(100%,760px);border-radius:18px 18px 0 0}.headline{font-size:27px}}
+    @media(max-width:370px){.nav-btn{font-size:9px}.nav-btn .nav-icon{font-size:18px}.balance{font-size:26px}.product{padding:11px}.buy{padding:9px}}
+  </style>
 </head>
 <body>
+  <header class="topbar">
+    <div class="topline"><div><div class="eyebrow">UBWOROZI BWA KIJYAMBERE</div><div class="brand">🌱 Smart Ubworozi</div></div><div class="avatar" aria-label="Umwirondoro">👤</div></div>
+    <div class="welcome">Murakaza neza kuri Smart Ubworozi</div>
+    <h1 class="headline" id="welcome-name">Korora neza, utere imbere.</h1>
+  </header>
 
-    <header>🌽 Smart Ubworozi Hub</header>
+  <main class="container">
+    <div class="notice" id="notice" role="status"></div>
 
-    <div class="container">
-        
-        <!-- Wallet View -->
-        <div class="wallet-card">
-            <p>Isanduku yawe (Wallet Balance)</p>
-            <h2 id="balance-view">0.00 RWF</h2>
-            <div class="btn-group">
-                <button class="btn btn-deposit" onclick="showForm('deposit')">🚀 Kubitsa</button>
-                <button class="btn btn-withdraw" onclick="showForm('withdraw')">💰 Kubikuza</button>
-            </div>
-            <button class="btn btn-checkin" onclick="dailyCheckin()">📅 Daily Check-in (+100 RWF)</button>
-        </div>
+    <section class="tab-panel active" id="panel-home">
+      <div class="section-heading"><div><h2>Ahabanza</h2><p class="sub">Incamake ya konti yawe</p></div></div>
+      <div class="wallet">
+        <div class="wallet-label">Amafaranga ari muri Wallet</div><div class="balance" id="balance-view">0 RWF</div>
+        <div class="wallet-foot">Amafaranga yawe abikwa muri konti yawe</div>
+        <div class="actions"><button class="action-btn" onclick="openTab('wallet')">＋ Kubitsa</button><button class="action-btn secondary" onclick="openTab('wallet')">↗ Kubikuza</button></div>
+      </div>
+      <div class="stats">
+        <div class="stat"><span class="emoji">🐄</span><p>Ibicuruzwa naguze</p><strong id="owned-count">0</strong></div>
+        <div class="stat"><span class="emoji">🎁</span><p>Ibihembo</p><strong id="earned-view">0 RWF</strong></div>
+        <div class="stat"><span class="emoji">👥</span><p>Abatumiwe</p><strong id="invite-count">0</strong></div>
+        <div class="stat"><span class="emoji">📅</span><p>Check-in y'uyu munsi</p><strong id="checkin-view">Ntabwo</strong></div>
+      </div>
+      <div class="section-heading"><div><h2>Ibicuruzwa bikunzwe</h2><p class="sub">Hitamo icy'ubworozi ushaka kureba</p></div><button class="primary" onclick="openTab('shop')">Reba byose</button></div>
+      <div class="product-list">
+        <article class="product"><div class="product-icon">🐔</div><div class="product-info"><h3>Inkoko zitera amagi</h3><p>Igicuruzwa cy'ubworozi bw'inkoko</p><div class="price">5,000 RWF</div></div><button class="buy" onclick="buyProduct(1)">Reba</button></article>
+        <article class="product"><div class="product-icon">🐄</div><div class="product-info"><h3>Inka y'amata</h3><p>Igicuruzwa cy'ubworozi bw'inka</p><div class="price">60,000 RWF</div></div><button class="buy" onclick="buyProduct(3)">Reba</button></article>
+      </div>
+    </section>
 
-        <!-- Iduka ry'Ibicuruzwa -->
-        <div class="section-title">🐓 Iduka ry'Ibicuruzwa by'Ubworozi</div>
-        
-        <div class="product-card">
-            <div class="product-info">
-                <h3>Inkoko z'amajyi (10 Layers Pack)</h3>
-                <p>Igiciro: <b>5,000 RWF</b> | Inyungu: 400 RWF / ku munsi</p>
-            </div>
-            <button class="btn-buy" onclick="buyProduct(1)">Gura</button>
-        </div>
+    <section class="tab-panel" id="panel-shop">
+      <div class="section-heading"><div><h2>🛒 Iduka ry'ibicuruzwa</h2><p class="sub">Ibicuruzwa by'ubworozi ushobora guhitamo</p></div></div>
+      <div class="product-list">
+        <article class="product"><div class="product-icon">🐔</div><div class="product-info"><h3>Inkoko zitera amagi</h3><p>Ipaki y'inkoko 10</p><div class="price">5,000 RWF</div></div><button class="buy" onclick="buyProduct(1)">Gura</button></article>
+        <article class="product"><div class="product-icon">🐖</div><div class="product-info"><h3>Ubworozi bw'ingurube</h3><p>Igice cy'ubworozi bw'ingurube</p><div class="price">25,000 RWF</div></div><button class="buy" onclick="buyProduct(2)">Gura</button></article>
+        <article class="product"><div class="product-icon">🐄</div><div class="product-info"><h3>Inka y'amata</h3><p>Igice cy'ubworozi bw'inka zitanga amata</p><div class="price">60,000 RWF</div></div><button class="buy" onclick="buyProduct(3)">Gura</button></article>
+      </div>
+      <p class="muted" style="margin-top:14px">Ibi ni ibisobanuro by'ibicuruzwa gusa. Igiciro n'inyungu nyakuri bigomba kwemezwa n'ubuyobozi mbere yo kugura.</p>
+    </section>
 
-        <div class="product-card">
-            <div class="product-info">
-                <h3>Modern Pig Feeding Unit</h3>
-                <p>Igiciro: <b>25,000 RWF</b> | Inyungu: 2,200 RWF / ku munsi</p>
-            </div>
-            <button class="btn-buy" onclick="buyProduct(2)">Gura</button>
-        </div>
+    <section class="tab-panel" id="panel-wallet">
+      <div class="section-heading"><div><h2>👛 Wallet</h2><p class="sub">Genzura amafaranga n'ubusabe bwawe</p></div></div>
+      <div class="wallet"><div class="wallet-label">Amafaranga asigaye</div><div class="balance" id="wallet-balance">0 RWF</div><div class="wallet-foot">Kubitsa no kubikuza bisaba kwemezwa n'ubuyobozi.</div></div>
+      <div class="actions"><button class="primary" onclick="showForm('deposit')">＋ Kubitsa</button><button class="primary" style="background:#fff;color:var(--green);border:1px solid var(--line)" onclick="showForm('withdraw')">↗ Kubikuza</button></div>
+      <div class="card form-card" id="action-form">
+        <h3 id="form-title">Ohereza ubusabe</h3><p class="muted" id="form-instruction" style="margin-top:7px"></p>
+        <input type="number" id="form-amount" min="1" placeholder="Umubare w'amafaranga (RWF)">
+        <input type="tel" id="form-phone" placeholder="Nomero ya terefoni">
+        <button class="primary full" onclick="submitFinanceForm()">Ohereza ubusabe</button><button class="full" style="background:#edf2ee;padding:12px;border-radius:10px;margin-top:8px" onclick="closeForm()">Funga</button>
+      </div>
+      <div class="card" style="margin-top:14px"><h3>Ibikorwa bya Wallet</h3><p class="muted" style="margin-top:8px">Ubusabe bwo kubitsa cyangwa kubikuza buzagaragara hano nyuma yo guhuza konti yawe na seriveri.</p></div>
+    </section>
 
-        <div class="product-card">
-            <div class="product-info">
-                <h3>Modern Dairy Cow Unit</h3>
-                <p>Igiciro: <b>60,000 RWF</b> | Inyungu: 5,500 RWF / ku munsi</p>
-            </div>
-            <button class="btn-buy" onclick="buyProduct(3)">Gura</button>
-        </div>
+    <section class="tab-panel" id="panel-invite">
+      <div class="section-heading"><div><h2>🎉 Gutumira inshuti</h2><p class="sub">Sangiza abandi Smart Ubworozi</p></div></div>
+      <div class="invite-box"><div style="font-size:42px">🤝</div><h3 style="margin-top:10px">Tumira inshuti zawe</h3><p class="muted" style="margin-top:8px">Koporora ubutumwa cyangwa kode yawe yo gutumira, uyisangize inshuti. Ibihembo bitangwa gusa niba gahunda yabyo yemejwe.</p>
+        <label for="invite-code" class="sub" style="display:block;margin-top:15px">Kode yawe yo gutumira</label><div class="invite-code"><input id="invite-code" value="SMART-INVITE" readonly><button class="primary" onclick="copyInvite()">Koporora</button></div>
+        <button class="primary full" onclick="shareInvite()">Sangiza inshuti</button>
+      </div>
+    </section>
 
-        <!-- Popup Form ya Manual Deposit / Withdraw -->
-        <div class="form-popup" id="action-form">
-            <h3 id="form-title">Kubitsa Manuweli</h3>
-            <p style="font-size: 12px; color: #ff9800; margin-bottom: 10px;" id="form-instruction"></p>
-            <input type="number" id="form-amount" placeholder="Umubare w'amafaranga (RWF)">
-            <input type="text" id="form-phone" placeholder="Nomero ya terefoni yakoreshejwe">
-            <button class="btn btn-submit" onclick="submitFinanceForm()">Ohereza Ubusabe</button>
-            <button class="btn btn-close" onclick="closeForm()">Funga</button>
-        </div>
+    <section class="tab-panel" id="panel-earnings">
+      <div class="section-heading"><div><h2>📈 Ibiryanye / Ibyinjira</h2><p class="sub">Incamake y'amafaranga winjije</p></div></div>
+      <div class="stats"><div class="stat"><span class="emoji">💵</span><p>Byose winjije</p><strong id="earnings-total">0 RWF</strong></div><div class="stat"><span class="emoji">🗓️</span><p>Ibihembo by'uyu munsi</p><strong id="daily-earnings">0 RWF</strong></div></div>
+      <div class="card"><h3>Check-in ya buri munsi</h3><p class="muted" style="margin-top:8px">Kanda hano niba gahunda ya check-in ikora kuri konti yawe. Igihembo icyo ari cyo cyose kigomba kuba cyemejwe na seriveri.</p><button class="primary full" onclick="dailyCheckin()">📅 Kora Check-in</button></div>
+    </section>
 
-    </div>
+    <section class="tab-panel" id="panel-profile">
+      <div class="section-heading"><div><h2>👤 Umwirondoro</h2><p class="sub">Amakuru ya konti yawe</p></div></div>
+      <div class="card"><div class="profile-row"><div class="profile-avatar">👤</div><div><h3 id="profile-name">Umukoresha</h3><p class="muted" id="profile-phone">Nta nomero yashyizweho</p></div></div><div class="list-row" style="margin-top:15px"><span>Imiterere ya konti</span><strong>Reba konti</strong></div><div class="list-row"><span>Umutekano</span><span>🔒</span></div><button class="primary full" onclick="showNotice('Guhindura umwirondoro bizongerwaho nyuma yo guhuza konti na seriveri.')">Hindura umwirondoro</button></div>
+    </section>
 
-    <!-- Ikoranabuhanga rihuza na Backend (JavaScript) -->
-    <script>
-        let currentAction = 'deposit';
-        let userId = 1; // Urugero rw'umukoresha winjiye
-        const BACKEND_URL = "http://localhost:3000/api"; // Aha uzashyira URL ya Render niba uyi-hostingize
+    <section class="tab-panel" id="panel-dashboard">
+      <div class="section-heading"><div><h2>📊 Dashboard</h2><p class="sub">Incamake y'ibikorwa byawe</p></div></div>
+      <div class="stats"><div class="stat"><span class="emoji">👛</span><p>Wallet</p><strong id="dash-balance">0 RWF</strong></div><div class="stat"><span class="emoji">🐓</span><p>Ibicuruzwa</p><strong id="dash-products">0</strong></div><div class="stat"><span class="emoji">🎁</span><p>Ibyinjijwe</p><strong id="dash-earned">0 RWF</strong></div><div class="stat"><span class="emoji">👥</span><p>Abatumiwe</p><strong id="dash-invites">0</strong></div></div>
+      <div class="card"><h3>Ibikorwa bya vuba</h3><p class="muted" style="margin-top:8px">Amakuru nyayo azagaragara hano umaze guhuza dashboard na konti yawe ya seriveri.</p></div>
+    </section>
+  </main>
 
-        function showForm(action) {
-            currentAction = action;
-            document.getElementById('action-form').style.display = 'block';
-            if(action === 'deposit') {
-                document.getElementById('form-title').innerText = "🚀 Ohereza Ubusabe bwo Kubitsa";
-                document.getElementById('form-instruction').innerText = "Banza uboherereze amafaranga kuri Momo y'agatoroshi (078XXXXXXX), hanyuma uze kwandika umubare na nomero yawe hano.";
-            } else {
-                document.getElementById('form-title').innerText = "💰 Ohereza Ubusabe bwo Kubikuza";
-                document.getElementById('form-instruction').innerText = "Amafaranga azahita akatwa, Admin aya mwoherereze mu gatoroshi ke kuri iyi nomero.";
-            }
-        }
+  <nav class="bottom-nav" aria-label="Amatab y'ingenzi">
+    <button class="nav-btn active" data-tab="home" onclick="openTab('home')"><span class="nav-icon">⌂</span><span>Home</span></button>
+    <button class="nav-btn" data-tab="shop" onclick="openTab('shop')"><span class="nav-icon">🛒</span><span>Iduka</span></button>
+    <button class="nav-btn" data-tab="wallet" onclick="openTab('wallet')"><span class="nav-icon">👛</span><span>Wallet</span></button>
+    <button class="nav-btn" data-tab="invite" onclick="openTab('invite')"><span class="nav-icon">👥</span><span>Gutumira</span></button>
+    <button class="nav-btn" data-tab="earnings" onclick="openTab('earnings')"><span class="nav-icon">📈</span><span>Ibiryanye</span></button>
+    <button class="nav-btn" data-tab="profile" onclick="openTab('profile')"><span class="nav-icon">👤</span><span>Profile</span></button>
+  </nav>
+  <script>
+    let currentAction = 'deposit';
+    // Shyiramo URL ya backend yawe ya production mbere yo gukoresha ibikorwa by'amafaranga.
+    const BACKEND_URL = ''; // Urugero: https://izina-ryawe.onrender.com/api
+    const storedUser = (() => { try { return JSON.parse(localStorage.getItem('smartUbworoziUser') || 'null'); } catch (_) { return null; } })();
+    let userId = storedUser && storedUser.id ? storedUser.id : null;
 
-        function closeForm() {
-            document.getElementById('action-form').style.display = 'none';
-        }
-
-        // 1. Kubitsa cyangwa Kubikuza Manuweli
-        async function submitFinanceForm() {
-            const amount = document.getElementById('form-amount').value;
-            const phoneNumber = document.getElementById('form-phone').value;
-            const endpoint = currentAction === 'deposit' ? '/manual/deposit' : '/manual/withdraw';
-
-            if(!amount || !phoneNumber) return alert("Uzuza ibyasabwe byose!");
-
-            const response = await fetch(BACKEND_URL + endpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId, amount, phoneNumber })
-            });
-            const data = await response.json();
-            alert(data.message);
-            closeForm();
-        }
-
-        // 2. Daily Check-in bonus
-        async function dailyCheckin() {
-            const response = await fetch(BACKEND_URL + '/user/checkin', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId })
-            });
-            const data = await response.json();
-            alert(data.message);
-        }
-
-        // 3. Kugura igicuruzwa cy'ubworozi
-        async function buyProduct(productId) {
-            const response = await fetch(BACKEND_URL + '/user/purchase', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId, productId })
-            });
-            const data = await response.json();
-            alert(data.message);
-        }
-    </script>
+    function openTab(tab) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      const panel = document.getElementById('panel-' + tab);
+      if (panel) panel.classList.add('active');
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+    function showNotice(message) {
+      const notice = document.getElementById('notice');
+      notice.textContent = message; notice.style.display = 'block';
+      window.setTimeout(() => { notice.style.display = 'none'; }, 5000);
+    }
+    function formatMoney(value) { return Number(value || 0).toLocaleString('en-US') + ' RWF'; }
+    function setBalance(value) {
+      ['balance-view','wallet-balance','dash-balance'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = formatMoney(value); });
+    }
+    async function api(path, options = {}) {
+      if (!BACKEND_URL) throw new Error('Banza ushyire URL ya backend yawe ya production muri BACKEND_URL. Ubu iyi page ni igishushanyo; ntiravugana na seriveri.');
+      const response = await fetch(BACKEND_URL + path, { ...options, headers: {'Content-Type':'application/json', ...(options.headers || {})} });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.message || data.error || 'Habaye ikibazo. Ongera ugerageze.');
+      return data;
+    }
+    function showForm(action) {
+      currentAction = action; openTab('wallet');
+      const form = document.getElementById('action-form'); form.classList.add('show');
+      document.getElementById('form-title').textContent = action === 'deposit' ? '🚀 Ubusabe bwo kubitsa' : '💰 Ubusabe bwo kubikuza';
+      document.getElementById('form-instruction').textContent = action === 'deposit'
+        ? 'Andika umubare na nomero wakoresheje. Ntukohereze amafaranga kuri nomero utahawe n’ubuyobozi bwemewe.'
+        : 'Andika umubare na nomero yawe. Ubusabe bugomba kugenzurwa mbere yo kwishyurwa.';
+    }
+    function closeForm() { document.getElementById('action-form').classList.remove('show'); }
+    async function submitFinanceForm() {
+      const amount = Number(document.getElementById('form-amount').value);
+      const phoneNumber = document.getElementById('form-phone').value.trim();
+      if (!Number.isFinite(amount) || amount <= 0 || !phoneNumber) return showNotice('Uzuza umubare urenze zero na nomero ya terefoni.');
+      if (!userId) return showNotice('Banza winjire muri konti yawe kugira ngo wohereze ubusabe.');
+      try { const data = await api(currentAction === 'deposit' ? '/manual/deposit' : '/manual/withdraw', {method:'POST', body:JSON.stringify({userId,amount,phoneNumber})}); showNotice(data.message || 'Ubusabe bwoherejwe.'); closeForm(); }
+      catch (e) { showNotice(e.message); }
+    }
+    async function dailyCheckin() {
+      if (!userId) return showNotice('Banza winjire muri konti yawe. Ntitwongeyeho amafaranga ku buryo bw’impimbano.');
+      try { const data = await api('/user/checkin',{method:'POST',body:JSON.stringify({userId})}); showNotice(data.message || 'Check-in yakiriwe.'); }
+      catch(e) { showNotice(e.message); }
+    }
+    async function buyProduct(productId) {
+      if (!userId) return showNotice('Banza winjire muri konti yawe mbere yo kugura.');
+      if (!confirm('Uremeza ko ushaka kohereza ubusabe bwo kugura iki gicuruzwa?')) return;
+      try { const data = await api('/user/purchase',{method:'POST',body:JSON.stringify({userId,productId})}); showNotice(data.message || 'Ubusabe bwo kugura bwoherejwe.'); }
+      catch(e) { showNotice(e.message); }
+    }
+    async function copyInvite() {
+      const input = document.getElementById('invite-code');
+      try { await navigator.clipboard.writeText(input.value); showNotice('Kode yakoporowe.'); }
+      catch (_) { input.select(); document.execCommand('copy'); showNotice('Kode yakoporowe.'); }
+    }
+    async function shareInvite() {
+      const text = 'Ngwino urebe Smart Ubworozi. Kode yo gutumira: ' + document.getElementById('invite-code').value;
+      if (navigator.share) { try { await navigator.share({title:'Smart Ubworozi',text}); } catch (_) {} }
+      else { try { await navigator.clipboard.writeText(text); showNotice('Ubutumwa bwakoporowe kugira ngo ubusangize inshuti.'); } catch (_) { showNotice(text); } }
+    }
+    if (storedUser) {
+      document.getElementById('profile-name').textContent = storedUser.fullName || 'Umukoresha';
+      document.getElementById('profile-phone').textContent = storedUser.phoneNumber || 'Nomero ntiyabonetse';
+      document.getElementById('welcome-name').textContent = 'Murakaza neza, ' + (storedUser.fullName || 'mukoresha') + '!';
+    }
+    document.getElementById('dash-products').textContent = document.getElementById('owned-count').textContent;
+    document.getElementById('dash-earned').textContent = document.getElementById('earned-view').textContent;
+    document.getElementById('dash-invites').textContent = document.getElementById('invite-count').textContent;
+  </script>
 </body>
 </html>
-
