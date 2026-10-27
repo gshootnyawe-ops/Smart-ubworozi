@@ -13,7 +13,7 @@ const db = new Pool({
 
 // ================= 1. AUTHENTICATION (IYANDIKISHA & KWINJIRA) =================
 
-app.post('https://smart-ubworozi.onrender.com/api/auth/register', async (req, res) => {
+app.post('/api/auth/register', async (req, res) => {
     const { fullName, phoneNumber, password } = req.body;
     try {
         const existing = await db.query("SELECT id FROM users WHERE phone_number = $1", [phoneNumber]);
