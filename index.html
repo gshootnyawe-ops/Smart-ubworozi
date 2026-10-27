@@ -168,7 +168,7 @@
   <script>
     let currentAction = 'deposit';
     // Shyiramo URL ya backend yawe ya production mbere yo gukoresha ibikorwa by'amafaranga.
-    const BACKEND_URL = ''; // Shyiramo URL ya Render yawe, urugero: https://smart-ubworozi.onrender.com/api
+    const BACKEND_URL = 'https://smart-ubworozi.onrender.com/api';
     let authMode = 'login';
     const storedUser = (() => { try { return JSON.parse(localStorage.getItem('smartUbworoziUser') || 'null'); } catch (_) { return null; } })();
     let userId = storedUser && storedUser.id ? storedUser.id : null;
