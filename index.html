@@ -24,6 +24,13 @@
     .auth-switch{display:flex;gap:8px;margin:12px 0}
     .auth-switch button{flex:1;border-radius:9px;padding:10px;background:#edf4ef;color:var(--green);font-weight:700}
     .auth-switch button.active{background:var(--green);color:white}
+    body.guest .bottom-nav{display:none}
+    body.guest .topbar .avatar{display:none}
+    .locked-message{display:none;background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;text-align:center;margin:22px 0}
+    .locked-message .lock-icon{font-size:42px;margin-bottom:10px}
+    .locked-message h2{font-size:20px;margin-bottom:8px}
+    .locked-message p{font-size:13px;color:var(--muted);line-height:1.5}
+    body.guest .tab-panel:not(#panel-home){display:none!important}
     .brand{font-size:19px;font-weight:800;letter-spacing:.2px}.eyebrow{font-size:12px;opacity:.82;margin-bottom:5px}
     .avatar{width:42px;height:42px;border-radius:50%;background:#ffffff26;border:1px solid #ffffff70;display:grid;place-items:center;font-size:20px}
     .welcome{margin-top:22px;font-size:14px;opacity:.9}.headline{font-size:23px;margin-top:5px;line-height:1.25}
@@ -79,6 +86,10 @@
         <p class="muted">Injira muri konti yawe cyangwa ukore konti nshya kugira ngo ukoreshe serivisi zacu.</p>
         <button class="primary full" onclick="openAuth('login')">Kwinjira</button>
         <button class="auth-create full" onclick="openAuth('register')">Kora konti nshya</button>
+        <div class="locked-message" id="guest-lock" style="display:block;margin-top:18px">
+          <div class="lock-icon">🔒</div><h2>Fungura konti kugira ngo ukomeze</h2>
+          <p>Iduka, Wallet, Gutumira, Ibiryanye, Profile na Dashboard biboneka gusa ku muntu winjiye muri konti ye.</p>
+        </div>
       </div>
     </section>
 
@@ -162,7 +173,14 @@
     const storedUser = (() => { try { return JSON.parse(localStorage.getItem('smartUbworoziUser') || 'null'); } catch (_) { return null; } })();
     let userId = storedUser && storedUser.id ? storedUser.id : null;
 
+    function isLoggedIn() { return Boolean(userId); }
     function openTab(tab) {
+      if (tab !== 'home' && !isLoggedIn()) {
+        openAuth('login');
+        showNotice('Banza winjire cyangwa ukore konti nshya kugira ngo ubone izindi tabs.');
+        return;
+      }
+      document.body.classList.toggle('guest', !isLoggedIn());
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
       const panel = document.getElementById('panel-' + tab);
       if (panel) panel.classList.add('active');
@@ -223,6 +241,7 @@
       if (navigator.share) { try { await navigator.share({title:'Smart Ubworozi',text}); } catch (_) {} }
       else { try { await navigator.clipboard.writeText(text); showNotice('Ubutumwa bwakoporowe kugira ngo ubusangize inshuti.'); } catch (_) { showNotice(text); } }
     }
+    document.body.classList.toggle('guest', !userId);
     if (storedUser) {
       document.getElementById('profile-name').textContent = storedUser.fullName || 'Umukoresha';
       document.getElementById('profile-phone').textContent = storedUser.phoneNumber || 'Nomero ntiyabonetse';
@@ -270,6 +289,7 @@
         const user = {...data.user, phoneNumber};
         localStorage.setItem('smartUbworoziUser', JSON.stringify(user));
         userId = user.id;
+        document.body.classList.remove('guest');
         document.getElementById('profile-name').textContent = user.fullName || 'Umukoresha';
         document.getElementById('profile-phone').textContent = phoneNumber;
         document.getElementById('welcome-name').textContent = 'Murakaza neza, ' + (user.fullName || 'mukoresha') + '!';
