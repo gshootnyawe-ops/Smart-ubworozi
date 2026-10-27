@@ -144,5 +144,16 @@ cron.schedule('0 0 * * *', async () => {
     } catch (err) { console.error(err); }
 });
 
-app.listen(3000, () => console.log('Smart Ubworozi Server running on port 3000'));
+const PORT = process.env.PORT || 3000;
+
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Smart Ubworozi backend irakora'
+  });
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Smart Ubworozi Server running on port ${PORT}`);
+});
 
