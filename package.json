@@ -1,0 +1,17 @@
+
+{
+  "name": "smart-ubworozi",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Smart Ubworozi backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "express": "^4.21.2",
+    "node-cron": "^3.0.3",
+    "pg": "^8.13.1"
+  }
+}
